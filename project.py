@@ -8,84 +8,6 @@ import sys
 from chemicals import search_chemical
 
 def main():
-    raw_input = input("Molecule: ")
-    if not validate_formula(raw_input):
-        sys.exit("Not a valid molecule")
-    molecule = raw_input
-
-    me = range(1)
-
-
-    for motivation in me:
-        lock_in(motivation)
-
-
-
-
-
-    print("-" * 120)
-
-    # Count the number of Valence Electrons in the compound-- consider the charge as well.
-
-
-    if matches := re.search(r"^(\d)", molecule):
-        coefficient = int(matches.group(1))
-        no_c_molecule = molecule[1:]
-    else:
-        coefficient = 1
-        no_c_molecule = molecule
-    # Maybe uneccesary to find coefficient ^^^
-    elements_and_nums = get_atoms_subscripts(no_c_molecule)
-    ve_total = get_total_valence(no_c_molecule)
-    central_atom = get_central_atom(no_c_molecule)
-
-
-    print(elements_and_nums)
-    print(f"Valence Electrons: {ve_total}")
-    print(f"Central Atom: {central_atom}")
-
-    num_terminal_atoms = 0
-    terminal_atoms = []
-    for part in elements_and_nums:
-        if part['Element'] != central_atom:
-            num_terminal_atoms += int(part['Subscript'])
-            for _ in range(int(part['Subscript'])):
-                terminal_atoms.append(part["Element"])
-
-        track_ve = ve_total - 2 * num_terminal_atoms
-        if track_ve != 0:
-            for terminal_atom in terminal_atoms:
-                if terminal_atom != "H":
-                    track_ve -= 6
-    # add lone pairs if needed
-    if track_ve != 0:
-        electron_groups = num_terminal_atoms
-        central_lone_pairs = int(track_ve / 2)
-        electron_groups += central_lone_pairs
-        track_ve = 0
-        central_electrons = central_lone_pairs * 2 + num_terminal_atoms
-    # check formal charge of central atom
-        central_atom_valence = get_element(central_atom).nvalence()
-        central_formal_charge = central_atom_valence - central_electrons
-    else:
-        electron_groups = num_terminal_atoms
-        central_electrons = num_terminal_atoms
-        central_formal_charge = get_element(central_atom).nvalence() - central_electrons
-        central_lone_pairs = 0
-
-    # go on with adding double or triple bonds. (If formal_charge_central != 0).
-
-
-    try:
-        print("Lone Pairs:", central_lone_pairs)
-    except UnboundLocalError:
-        pass
-    print("Electron Groups / Steric Number:", electron_groups)
-    print("Terminal Atoms:", terminal_atoms)
-
-
-
-
     vsepr_table = {
     "AX2": {
         "steric_number": 2,
@@ -205,15 +127,121 @@ def main():
         "hybridization": "sp3d2"
     }
 }
-    if central_lone_pairs != 0:
+    # Error Checking and input
+    print(
+    "Welcome to VSEPR Predictor! "
+    )
+    raw_input = input("Molecule: ")
+    if not validate_formula(raw_input):
+        sys.exit("Not a valid molecule (please disclude starting coefficient, if applicable)")
+    molecule = raw_input
+
+    me = range(1)
+    for motivation in me:
+        lock_in(motivation)
+
+    print("-" * 120)
+
+    # Count the number of Valence Electrons in the compound-- consider the charge as well.
+
+
+
+    # Perhaps uneccesary to find coefficient ^^^
+    elements_and_nums = parse_atoms_subscripts(molecule)
+    ve_total = calculate_total_valence(molecule)
+    try:
+        central_atom = determine_central_atom(molecule)
+    except ValueError:
+        sys.exit("There must be a central atom present. If there are only 2 elements in the given input, know that the molecular geometry of the shape is Linear.")
+
+    central_lone_pairs, terminal_atoms = fetch_structure_data(elements_and_nums, ve_total, central_atom)
+    num_terminal_atoms = len(terminal_atoms)
+    steric_number = central_lone_pairs + num_terminal_atoms
+    if steric_number > 6:
+        sys.exit("Sorry, pick a molecule with less than 7 electron groups / with one central atom. Try picking a molecule with less elements.")
+
+
+
+
+
+
+    # go on with adding double or triple bonds. (If formal_charge_central != 0).
+
+
+
+
+
+
+
+
+
+    # Search all data.
+    if central_lone_pairs == 1:
+        vsepr_form = f"AX{num_terminal_atoms}E"
+
+        e_geo = vsepr_table[vsepr_form]["electron_geometry"]
+
+    elif central_lone_pairs != 0:
         vsepr_form = f"AX{num_terminal_atoms}E{central_lone_pairs}"
+        e_geo = vsepr_table[vsepr_form]["electron_geometry"]
+
     else:
-        vsepr_form = f"AX{num_terminal_atoms}"
-    e_geo = vsepr_table[vsepr_form]["electron_geometry"]
+        vsepr_form = f"AX{num_terminal_atoms}E"
+
+        e_geo = vsepr_table[vsepr_form]["electron_geometry"]
+
+
     mol_geo = vsepr_table[vsepr_form]["molecular_geometry"]
     hybridization = vsepr_table[vsepr_form]["hybridization"]
     bond_angles = vsepr_table[vsepr_form]["bond_angles"]
 
+    element_one = elements_and_nums[0]['Element']
+    sub_element_one = int(elements_and_nums[0]['Subscript'])
+    element_two = elements_and_nums[1]['Element']
+    sub_element_two = int(elements_and_nums[1]['Subscript'])
+
+    print(f"""Alright, first we have to calculate the total number of valence electrons we have.
+   """)
+    while True:
+        ve_input = int(input("Can you calculate the total number of Valence Electrons? Answer Here: "))
+        if ve_input == ve_total:
+            break
+        elif ve_input == "HINT":
+             print(f"""We see that we have {sub_element_one} {element_one} molecules and {sub_element_two} {element_two} molecules.
+We can then calculate the valence electrons for each part. Looking at a periodic table, {element_one} has {get_element(element_one).nvalence()} valence electrons
+and we have {sub_element_one} of them. Therefore, we multiply {get_element(element_one).nvalence()} valence electrons per molecule by {sub_element_one} molecule(s) to get {sub_element_one * get_element(element_one).nvalence()} valence electrons.
+The same process goes straight-forwardly for the other parts, and we get the total number of Valence Electrons: ???)""")
+
+        elif ve_input == "SKIP":
+            print(f"The total amount of valence electrons is {ve_total}!")
+            break
+        else:
+            print("That is incorrect! Try again, or type HINT for a hint; SKIP to reveal the answer (these keywords will work for any time in this program when you need them).")
+
+    print("""Great! Now that we have the total number of valence electrons, we can use this to create out partial lewis structure, and then figure out our lone pairs and electron groups.
+    Now, let's go step by step. First, we have to find the central atom of our molecule.""")
+
+    while True:
+        central_atom_input = input("Now, can you find the Central Atom for our molecule? Central Atom (Type here): ")
+        if central_atom_input == central_atom:
+            print(f"Correct! Our central atom is indeed {central_atom}.")
+            break
+        elif central_atom_input == "HINT":
+            print("""Okay, you asked for a hint. The central atom is the atom which is least electronegative amoung all the elements present in the molecule.
+            To figure this out, you need to look at a periodic table and remember the patterns in them, or you can use your knowledge about electronegativites if you have it.
+            If this is difficult for you, use an electronegativites chart (like the Pauling Scale periodic table of electronegativites) or type SKIP if it is too difficult!""")
+        elif central_atom_input == "SKIP":
+            print(f""""The central atom of this molecule is {central_atom}.
+            We can figure this out by know""" )
+
+
+
+    print(elements_and_nums)
+    print(f"Valence Electrons: {ve_total}")
+    print(f"Central Atom: {central_atom}")
+    print("Lone Pairs:", central_lone_pairs)
+    print("Electron Groups / Steric Number:", steric_number)
+    print("Terminal Atoms:", terminal_atoms)
     print("Electron Geometry:", e_geo)
     print("Molecular Geometry:", mol_geo)
     print("Bond Hybridization:", hybridization)
@@ -234,7 +262,41 @@ def main():
 
 # Count the amount of electron pairs/clouds around the central atom; give the compounds its electron-group geo.
 # ignore lone pairs and consider the greater space they take up to predict the molecular geometry.
-def get_central_atom(molecule):
+
+def fetch_structure_data(elements_and_nums, ve_total, central_atom,):
+    num_terminal_atoms = 0
+    terminal_atoms = []
+    for part in elements_and_nums:
+        if part['Element'] != central_atom:
+            num_terminal_atoms += int(part['Subscript'])
+            for _ in range(int(part['Subscript'])):
+                terminal_atoms.append(part["Element"])
+
+        track_ve = ve_total - 2 * num_terminal_atoms
+        if track_ve != 0:
+            for terminal_atom in terminal_atoms:
+                if terminal_atom != "H":
+                    track_ve -= 6
+    # add lone pairs if needed
+    if track_ve != 0:
+
+        central_lone_pairs = int(track_ve / 2)
+
+        track_ve = 0
+        central_electrons = central_lone_pairs * 2 + num_terminal_atoms
+    # check formal charge of central atom
+        central_atom_valence = get_element(central_atom).nvalence()
+        central_formal_charge = central_atom_valence - central_electrons
+        # ^^ Might use central_formal_charge for creating the double and triple bonds later
+
+    else:
+        central_electrons = num_terminal_atoms
+        central_formal_charge = get_element(central_atom).nvalence() - central_electrons
+        central_lone_pairs = 0
+    return central_lone_pairs, terminal_atoms
+
+
+def determine_central_atom(molecule):
     matches = re.findall(r"([A-Z][a-z]?)(\d?)" ,molecule)
 
     elements = [atom for atom, _, in matches if atom]
@@ -252,7 +314,7 @@ def get_central_atom(molecule):
     central_atom = no_h_elements[position]
     return central_atom
 
-def get_total_valence(molecule):
+def calculate_total_valence(molecule):
     pure_ve_total = 0
     atom_matches = re.findall(r"([A-Z][a-z]?)(\d?)" ,molecule)
     for element, subscript, in atom_matches:
@@ -284,7 +346,7 @@ def get_total_valence(molecule):
         ve_total = pure_ve_total
     return ve_total
 
-def get_atoms_subscripts(molecule):
+def parse_atoms_subscripts(molecule):
 
     matches = re.findall(r"([A-Z][a-z]?)(\d?)" ,molecule)
     elements_and_nums = []
@@ -307,7 +369,7 @@ def lock_in(m):
 
 def validate_formula(formula):
     try:
-        result = search_chemical(formula)
+        search_chemical(formula)
         return True
     except ValueError:
         return False
