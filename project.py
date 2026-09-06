@@ -153,8 +153,14 @@ def main():
         central_atom = determine_central_atom(molecule)
     except ValueError:
         sys.exit("There must be a central atom present. If there are only 2 elements in the given input, know that the molecular geometry of the shape is Linear.")
-
-    central_lone_pairs, terminal_atoms = fetch_structure_data(elements_and_nums, ve_total, central_atom)
+    try:
+        central_lone_pairs, terminal_atoms = fetch_structure_data(elements_and_nums, ve_total, central_atom)
+    except ValueError:
+        sys.exit(f"""{molecule} is a radical. This means the molecule has a lone electron around the central electron, due to the odd number of valence electrons.
+Unfortunately, simple VSEPR theory cannot reliably predict the shapes of these radicals; as, a single electron repels, but not as much as a lone pair.
+As a result, experimental data or otherwise strict quantum mechanics is needed to mathematically predict the shape of this molecule.""")
+    if not terminal_atoms:
+        sys.exit(f"{molecule} has no terminal atoms. Diatomic molecules, including this one, are Linear by definition.")
     num_terminal_atoms = len(terminal_atoms)
     steric_number = central_lone_pairs + num_terminal_atoms
     if steric_number > 6:
@@ -178,17 +184,29 @@ def main():
     # Search all data.
     if central_lone_pairs == 1:
         vsepr_form = f"AX{num_terminal_atoms}E"
+        try:
+            e_geo = vsepr_table[vsepr_form]["electron_geometry"]
+        except KeyError:
+            sys.exit(f"Sorry, {molecule} has no defined central atom. By definition, these diatomic molecules have a Linear geometry.")
 
-        e_geo = vsepr_table[vsepr_form]["electron_geometry"]
 
     elif central_lone_pairs != 0:
         vsepr_form = f"AX{num_terminal_atoms}E{central_lone_pairs}"
-        e_geo = vsepr_table[vsepr_form]["electron_geometry"]
+        try:
+            e_geo = vsepr_table[vsepr_form]["electron_geometry"]
+        except KeyError:
+            sys.exit(f"Sorry, {molecule} has no defined central atom. By definition, these diatomic molecules have a Linear geometry.")
+
+
 
     else:
-        vsepr_form = f"AX{num_terminal_atoms}E"
+        vsepr_form = f"AX{num_terminal_atoms}"
+        try:
+            e_geo = vsepr_table[vsepr_form]["electron_geometry"]
+        except KeyError:
+            sys.exit(f"Sorry, {molecule} has no defined central atom. By definition, these diatomic molecules have a Linear geometry.")
 
-        e_geo = vsepr_table[vsepr_form]["electron_geometry"]
+
 
 
     mol_geo = vsepr_table[vsepr_form]["molecular_geometry"]
@@ -202,37 +220,51 @@ def main():
 
     print(f"""Alright, first we have to calculate the total number of valence electrons we have.
    """)
-    while True:
-        ve_input = int(input("Can you calculate the total number of Valence Electrons? Answer Here: "))
-        if ve_input == ve_total:
-            break
-        elif ve_input == "HINT":
-             print(f"""We see that we have {sub_element_one} {element_one} molecules and {sub_element_two} {element_two} molecules.
+    all_skip = False
+    while all_skip == False:
+        while True:
+            ve_input = input("Can you calculate the total number of Valence Electrons? Answer Here: ")
+
+            if ve_input == "HINT":
+                print(f"""We see that we have {sub_element_one} {element_one} molecules and {sub_element_two} {element_two} molecules.
 We can then calculate the valence electrons for each part. Looking at a periodic table, {element_one} has {get_element(element_one).nvalence()} valence electrons
 and we have {sub_element_one} of them. Therefore, we multiply {get_element(element_one).nvalence()} valence electrons per molecule by {sub_element_one} molecule(s) to get {sub_element_one * get_element(element_one).nvalence()} valence electrons.
 The same process goes straight-forwardly for the other parts, and we get the total number of Valence Electrons: ???)""")
+            elif ve_input == "SKIP":
+                print(f"The total amount of valence electrons is {ve_total}!")
+                break
 
-        elif ve_input == "SKIP":
-            print(f"The total amount of valence electrons is {ve_total}!")
+            elif ve_input.isdigit() and int(ve_input) == ve_total:
+                break
+            elif ve_input == "ALL SKIP":
+                all_skip = True
+                break
+            else:
+                print("That is incorrect! Try again, or type HINT for a hint; SKIP to reveal the answer; ALL SKIP to skip all questions (these keywords will work for any time in this program when you need them).")
+        if all_skip:
             break
-        else:
-            print("That is incorrect! Try again, or type HINT for a hint; SKIP to reveal the answer (these keywords will work for any time in this program when you need them).")
-
-    print("""Great! Now that we have the total number of valence electrons, we can use this to create out partial lewis structure, and then figure out our lone pairs and electron groups.
-    Now, let's go step by step. First, we have to find the central atom of our molecule.""")
-
-    while True:
-        central_atom_input = input("Now, can you find the Central Atom for our molecule? Central Atom (Type here): ")
-        if central_atom_input == central_atom:
-            print(f"Correct! Our central atom is indeed {central_atom}.")
+        print("""Great! Now that we have the total number of valence electrons, we can use this to create out partial lewis structure, and then figure out our lone pairs and electron groups.
+Now, let's go step by step. First, we have to find the central atom of our molecule.""")
+        print("-" * 50)
+        while True:
+            central_atom_input = input("Now, can you find the Central Atom for our molecule? Central Atom (Type here): ")
+            if central_atom_input == central_atom:
+                print(f"Correct! Our central atom is indeed {central_atom}.")
+                break
+            elif central_atom_input == "HINT":
+                print("""Okay, you asked for a hint. The central atom is the atom which is least electronegative amoung all the elements present in the molecule.
+To figure this out, you need to look at a periodic table and remember the patterns in them, or you can use your knowledge about electronegativites if you have it.
+If this is difficult for you, use an electronegativites chart (like the Pauling Scale periodic table of electronegativites) or type SKIP if it is too difficult!
+Note that Hydrogen is never a central atom.""")
+            elif central_atom_input == "SKIP":
+                print(f"""The central atom of this molecule is {central_atom}.
+We can figure this out by knowing that {central_atom} is the least electronegative of the elements in this molecule (besides hydrogen).""" )
+                break
+            elif central_atom_input == "ALL SKIP":
+                all_skip = True
+                break
+        if all_skip:
             break
-        elif central_atom_input == "HINT":
-            print("""Okay, you asked for a hint. The central atom is the atom which is least electronegative amoung all the elements present in the molecule.
-            To figure this out, you need to look at a periodic table and remember the patterns in them, or you can use your knowledge about electronegativites if you have it.
-            If this is difficult for you, use an electronegativites chart (like the Pauling Scale periodic table of electronegativites) or type SKIP if it is too difficult!""")
-        elif central_atom_input == "SKIP":
-            print(f""""The central atom of this molecule is {central_atom}.
-            We can figure this out by know""" )
 
 
 
@@ -277,21 +309,25 @@ def fetch_structure_data(elements_and_nums, ve_total, central_atom,):
             for terminal_atom in terminal_atoms:
                 if terminal_atom != "H":
                     track_ve -= 6
-    # add lone pairs if needed
-    if track_ve != 0:
 
-        central_lone_pairs = int(track_ve / 2)
+    # add lone pairs if needed
+    if track_ve > 0:
+
+        central_lone_pairs, extra_electrons = divmod(track_ve, 2)
 
         track_ve = 0
-        central_electrons = central_lone_pairs * 2 + num_terminal_atoms
+        if extra_electrons != 0:
+            raise ValueError("This molecule is a radical. VSEPR Theory cannot reliably calculate the geometries of these molecules.")
+
+        # central_electrons = central_lone_pairs * 2 + num_terminal_atoms
+
     # check formal charge of central atom
-        central_atom_valence = get_element(central_atom).nvalence()
-        central_formal_charge = central_atom_valence - central_electrons
+        # central_electrons = (central_lone_pairs * 2) + extra_electrons + num_terminal_atoms
+        # central_atom_valence = get_element(central_atom).nvalence()
+        # central_formal_charge = central_atom_valence - central_electrons
         # ^^ Might use central_formal_charge for creating the double and triple bonds later
 
     else:
-        central_electrons = num_terminal_atoms
-        central_formal_charge = get_element(central_atom).nvalence() - central_electrons
         central_lone_pairs = 0
     return central_lone_pairs, terminal_atoms
 
@@ -300,11 +336,15 @@ def determine_central_atom(molecule):
     matches = re.findall(r"([A-Z][a-z]?)(\d?)" ,molecule)
 
     elements = [atom for atom, _, in matches if atom]
-
+    no_h_elements = [e for e in elements if e != "H"]
+    if not no_h_elements:
+        raise ValueError("no non-hydrogen atom available")
+    # use set to remove duplicates
+    if len(set(elements)) < 2:
+        raise ValueError(f"{molecule} has no distinct central atom.")
 
 
     electronegativities = []
-    no_h_elements = [e for e in elements if e != "H"]
     for element in no_h_elements:
             element_obj = get_element(element)
             electronegativities.append(element_obj.electronegativity())
