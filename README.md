@@ -2,6 +2,10 @@
 ### Video Demo: <URL HERE>
 ### Introduction
 VSEPR-Predictor (Valence Shell Electron Pair Repulsion - Predictor) is a cmd-line tool where a molecule is taken as input, and various different data is given as output-- mainly electron and molecular geometries, which then yields other info like hybridization-- with stepwise explanations as well. Calculating electron and molecular geometries *could* be done using quantum mechanics; however this project's aim is to create a viable tool for students or others who would like the learn how to use VSEPR theory tangibly.
+
+### **Limitations**
+**It is important to preface** that *diatomic molecules*, like $\text{N}_2$ or $\text{O}_2$, and *radical molecules*, like $\text{C}\text{H}_3$ or $\text{N}\text{O}_2$, are **not** fully supported for this predictor. When given a diatomic molecule, the program outputs that the shape is linear, however doesn't include other data. This is because diatomics are fairly simple and do not need VSEPR theory, and the educational tool becomes arbitrary. As for radical molecules, they are much to volatile to predict. Radical molecules have 1 electron acting as a sort of lone pair around the central atom. This 1 electron can sometimes affect the geometries or sometimes not. To figure this out, **quantum mechanics** must be used, which defeats the purpose of this tool.
+
 ### Process
 The method used in this project is creating an abstract lewis structure of the molecule given, finding its central atom, terminal atoms . . . and most importantly its electron groups/clouds / steric number. Using the steric number or electron groups, and writing the molecule in VSEPR Form-- using the VSEPR Formula: $$AX_mE_n$$ -- the code then uses this formula and looks up its data in a dictionary.
 #### Formula Breakdown
@@ -73,7 +77,7 @@ The following are the simplified order of steps for the `fetch_structure_data(el
 And there we have it: the electron groups and lone pairs around the central atom, essential for using VSEPR Theory. The code then writes the molecule's properties in VSEPR Form (read **Process**, 1st section under introduction.) If you didn't know, the amount of lone pairs, although it doesn't change the amount of electron groups we have, is needed because they take up more space and have stronger coulomb forces (they repel other electrons more). Therefore, the shape changes and that needs to be accounted for. Note that, there is no logic like this for double or triple bonds, so they do not matter for our purposes.
 
 #### **Summary and Conclusion**
-VSEPR Predictor is a project that very mathematically and algorithmically calculates electron groups and lone pairs, needing prerequisite information to figure that out, and also yielding extra information like bond hybridization as well. The approach, abstractly, is similar to how you would use VSEPR Theory on-paper. However, the logic must be written differently and 'translated' into code. This way, the project was perfect for a first project to practice my skills, as it becomes a sort of challenge.
+VSEPR Predictor is a project that very mathematically and algorithmically calculates electron groups and lone pairs, needing prerequisite information to figure that out, and also yielding extra information like bond hybridization as well. The approach, abstractly, is similar to how you would use VSEPR Theory on-paper. However, the logic must be written differently and 'translated' into code. This way, the project was perfect for a first project to practice my skills, as it becomes a sort of challenge. **Thanks a lot for reading!**
 
 
 
