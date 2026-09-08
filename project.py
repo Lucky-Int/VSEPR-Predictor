@@ -208,7 +208,7 @@ As a result, experimental data or otherwise strict quantum mechanics is needed t
 
 
 
-
+    no_h_terminal_atoms = [a for a in terminal_atoms if a != "H"]
     mol_geo = vsepr_table[vsepr_form]["molecular_geometry"]
     hybridization = vsepr_table[vsepr_form]["hybridization"]
     bond_angles = vsepr_table[vsepr_form]["bond_angles"]
@@ -218,53 +218,134 @@ As a result, experimental data or otherwise strict quantum mechanics is needed t
     element_two = elements_and_nums[1]['Element']
     sub_element_two = int(elements_and_nums[1]['Subscript'])
 
-    print(f"""Alright, first we have to calculate the total number of valence electrons we have.
-   """)
+    print(f"""
+    Alright, first we have to calculate the total number of valence electrons we have.
+    """)
     all_skip = False
     while all_skip == False:
         while True:
-            ve_input = input("Can you calculate the total number of Valence Electrons? Answer Here: ")
 
-            if ve_input == "HINT":
-                print(f"""We see that we have {sub_element_one} {element_one} molecules and {sub_element_two} {element_two} molecules.
+            ve_input = input("\nCan you calculate the total number of Valence Electrons? Answer Here: ")
+
+            if ve_input.isalpha() and ve_input.upper().strip() == "HINT":
+                print(f"""
+    We see that we have {sub_element_one} {element_one} molecule(s) and {sub_element_two} {element_two} molecule(s).
 We can then calculate the valence electrons for each part. Looking at a periodic table, {element_one} has {get_element(element_one).nvalence()} valence electrons
 and we have {sub_element_one} of them. Therefore, we multiply {get_element(element_one).nvalence()} valence electrons per molecule by {sub_element_one} molecule(s) to get {sub_element_one * get_element(element_one).nvalence()} valence electrons.
 The same process goes straight-forwardly for the other parts, and we get the total number of Valence Electrons: ???)""")
-            elif ve_input == "SKIP":
-                print(f"The total amount of valence electrons is {ve_total}!")
+            elif ve_input.isalpha() and ve_input.upper().strip() == "SKIP":
+                print(f"\nThe total amount of valence electrons is {ve_total}!")
                 break
 
             elif ve_input.isdigit() and int(ve_input) == ve_total:
+                print("\nWow, that's correct!")
                 break
-            elif ve_input == "ALL SKIP":
+            elif str(ve_input).upper().strip() == "ALL SKIP":
                 all_skip = True
                 break
             else:
-                print("That is incorrect! Try again, or type HINT for a hint; SKIP to reveal the answer; ALL SKIP to skip all questions (these keywords will work for any time in this program when you need them).")
+                print("\nThat is incorrect! Please try again, or type HINT for a hint; SKIP to reveal the answer; ALL SKIP to skip all questions (these keywords will work for any time in this program when you need them).")
         if all_skip:
             break
-        print("""Great! Now that we have the total number of valence electrons, we can use this to create out partial lewis structure, and then figure out our lone pairs and electron groups.
-Now, let's go step by step. First, we have to find the central atom of our molecule.""")
-        print("-" * 50)
+
+        print(f"""
+    {"-" * 50}
+    Great! Now that we have the total number of valence electrons, we can use this to create out partial lewis structure, and then figure out our lone pairs and electron groups.
+    Now, let's go step by step. First, we have to find the central atom of our molecule.
+    {"-" * 50}""")
+
         while True:
-            central_atom_input = input("Now, can you find the Central Atom for our molecule? Central Atom (Type here): ")
+
+            central_atom_input = input("\nNow, can you find the Central Atom for our molecule? Central Atom (Type here): ")
+
             if central_atom_input == central_atom:
-                print(f"Correct! Our central atom is indeed {central_atom}.")
+                print(f"\nCorrect! Our central atom is indeed {central_atom}.")
                 break
-            elif central_atom_input == "HINT":
-                print("""Okay, you asked for a hint. The central atom is the atom which is least electronegative amoung all the elements present in the molecule.
-To figure this out, you need to look at a periodic table and remember the patterns in them, or you can use your knowledge about electronegativites if you have it.
-If this is difficult for you, use an electronegativites chart (like the Pauling Scale periodic table of electronegativites) or type SKIP if it is too difficult!
-Note that Hydrogen is never a central atom.""")
-            elif central_atom_input == "SKIP":
-                print(f"""The central atom of this molecule is {central_atom}.
-We can figure this out by knowing that {central_atom} is the least electronegative of the elements in this molecule (besides hydrogen).""" )
+
+            elif central_atom_input.isalpha() and central_atom_input.upper().strip() == "HINT":
+                print("""
+    Okay, you asked for a hint. The central atom is the atom which is least electronegative amoung all the elements present in the molecule.
+    To figure this out, you need to look at a periodic table and remember the patterns in them, or you can use your knowledge about electronegativites if you have it.
+    If this is difficult for you, use an electronegativites chart (like the Pauling Scale periodic table of electronegativites) or type SKIP if it is too difficult!
+    Note that Hydrogen is never a central atom.""")
+
+            elif central_atom_input.isalpha() and central_atom_input.upper().strip() == "SKIP":
+                print(f"""
+    The central atom of this molecule is {central_atom}.
+    We can figure this out by knowing that {central_atom} is the least electronegative of the elements in this molecule (besides hydrogen).""" )
                 break
-            elif central_atom_input == "ALL SKIP":
+
+            elif str(central_atom_input).upper().strip() == "ALL SKIP":
                 all_skip = True
                 break
+            else:
+                print("\nThat's unfortunately incorrect! Please try again, or remember that you can: type HINT for a hint; SKIP to reveal the answer; ALL SKIP to skip all questions (these keywords will work for any time in this program when you need them as aforementioned!). ")
         if all_skip:
             break
+        print(f"""
+        {"-" * 50}
+        Alright. Now, let's start mapping out a bit of our dot/lewis structure. We know that {central_atom} is in the center, and we have {" and ".join(terminal_atoms)} as terminal atoms.
+We have to draw covelant bonds from our central atom to our terminal atoms, yielding us {num_terminal_atoms} of them.
+
+        Since we drew {num_terminal_atoms} covelant bonds, we 'used up' {2*num_terminal_atoms}, using 2 for every 1 covelant bond.
+
+        Therefore, we can now track how many Valence Electrons we "have", yielding {ve_total - 2*num_terminal_atoms} valence electrons.
+
+        The main idea is to keep drawing specific parts of the lewis/dot structure while tracking our valence electrons, doing this until the amount of valence electrons is equal to zero (0).
+
+        Now, we want the terminal atoms to have 8 valence electrons, fulfulling the 'octet-rule'. This is true for all atoms but hydrogen, which
+only needs 2 valence electrons to become stable.
+
+        We will add lone pairs of electrons (2 per) to these terminal atoms that need it, to reach the octet rule. Recall that we have covelant
+bonds connected to the central atom and every terminal atom, so hydrogens won't need any more electrons, and all others will need 3 more lone pairs (6 more electrons).
+        {"-" * 50}""")
+
+        while True:
+            track_ve = input("When we do this process, fulfulling octet rules for every terminal atom (except for hydrogen), how many electrons do we have after the process?")
+
+            if str(track_ve).upper().strip() == "HINT":
+                print("You want a hint?-- You get a hint! Remember that these terminal atoms need to have 8 electrons. Right now, they have 2!" \
+"So we have to add 6 electrons for each one of those terminal atoms. Then, subtract our original total from the number used to assign to the terminal atoms in order to get the correct answer.")
+
+            elif str(track_ve).upper().strip() == "SKIP":
+                print(f"""The correct answer is {ve_total - 6*len(no_h_terminal_atoms)} valence electrons.
+We get this by knowing that we need 6 more electrons for every terminal atom but hydrogen, yielding us 6 times the number of terminal atoms
+that are not hydrogen as how many valence electrons we used. We then subract this number from our original valence electron total to get our answer.""")
+
+            elif str(track_ve).upper().strip() == "ALL SKIP":
+                all_skip = True
+                break
+
+            elif track_ve == ve_total - 6*len(no_h_terminal_atoms):
+                print(f"""Amazing! That's correct-- we will indeed have {ve_total - 6*len(no_h_terminal_atoms)} valence electrons left.""")
+
+
+            else:
+                print(f"""Sorry, your answer is incorrect. Please try again, or type: HINT for a hint; SKIP to skip; ALL SKIP to skip all questions.""")
+        if all_skip:
+            break
+
+        if ve_total - 6*len(no_h_terminal_atoms) == 0:
+            print(f"""
+            {"-" * 50}
+            Since we have 0 valence electrons left, we are DONE! We have what we need and we can now count electron groups and lone pairs.
+            {"-"*50}""")
+
+        else:
+             print(f"""
+            {"-" * 50}
+            Since we still have valence electrons left, we still have more to go. We will now assign these leftover electrons to the central atom.
+            We will do this in lone pairs (2 per.)
+
+            How many lone pairs will we have on the central atom? Well, that's simple. We have {ve_total - 6*len(no_h_terminal_atoms)} left,
+            so we will assign all of them and therefore there will be {(ve_total - 6*len(no_h_terminal_atoms))/2} lone pairs around the central atom.
+            {"-"*50}""")
+
+        # convert into question ^ ?
+
+
+        # NEED --> break. At the end.
+
 
 
 
