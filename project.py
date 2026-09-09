@@ -335,11 +335,35 @@ that are not hydrogen as how many valence electrons we used. We then subract thi
              print(f"""
             {"-" * 50}
             Since we still have valence electrons left, we still have more to go. We will now assign these leftover electrons to the central atom.
-            We will do this in lone pairs (2 per.)
+            We will do this in lone pairs (2 per*).
 
-            How many lone pairs will we have on the central atom? Well, that's simple. We have {ve_total - 6*len(no_h_terminal_atoms)} left,
-            so we will assign all of them and therefore there will be {(ve_total - 6*len(no_h_terminal_atoms))/2} lone pairs around the central atom.
+            * Remember that lone pairs have 2 electrons in them.
             {"-"*50}""")
+        while True:
+            ans_lone_pairs = input("\nHow many lone pairs will we have on the central atom?")
+
+            if ans_lone_pairs == str(central_lone_pairs):
+                print(f"""\nNice! Just as you stated, we have {central_lone_pairs} lone pairs.""")
+
+            elif ans_lone_pairs == "HINT":
+                print(f"""\nHere's hint for you! We have {ve_total - 6*len(no_h_terminal_atoms)} left,
+            so we will assign all of them and therefore there will be ??? lone pairs around the central atom.""")
+
+            elif ans_lone_pairs == "SKIP":
+                print(f"""That's alright! The correct answer is {(ve_total - 6*len(no_h_terminal_atoms))/2} Lone Pairs.
+This is because we had {(ve_total - 6*len(no_h_terminal_atoms))} left, therefore we have to assign all
+of those electrons to the central atom in lone pairs (pairs of 2). To put it simply, divide the amount of valence electrons
+we previously had by 2 to get our answer! """)
+
+            elif ans_lone_pairs == "ALL SKIP":
+                all_skip = True
+                break
+
+            else:
+                print("""Your answer is close (I hope)! Remember that you can type: 'HINT' for a hint; 'SKIP' to skip;
+                'ALL SKIP' to skip all questions.""")
+            if all_skip:
+                break
 
         # convert into question ^ ?
 
@@ -398,7 +422,7 @@ def fetch_structure_data(elements_and_nums, ve_total, central_atom,):
 
         track_ve = 0
         if extra_electrons != 0:
-            raise ValueError("This molecule is a radical. VSEPR Theory cannot reliably calculate the geometries of these molecules.")
+            raise ValueError("This molecule is a radical. VSEPR Theory cannot reliably calculate the geometries of these molecules; please try a different molecule.")
 
         # central_electrons = central_lone_pairs * 2 + num_terminal_atoms
 
