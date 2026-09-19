@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VSEPR Predictor & Modeler</title>
+     <link rel="stylesheet" href="style.css" type="text/css">
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sakura.css/css/sakura.css" type="text/css">
+</head>
+<body>
+    <header>
+       
+        <h1>VSEPR Molecular Predictor and Modeler </h1>
+      
+        <p>VSEPR Predictor is a project that takes in a molecule and calculates its molecular shape and geometries by calculating lewis structure, electron groups, and more.</p>
+        <div>
+        <button id = "docsBtn" class = "bottom_button">README.md</button>
+        <button id = "gitBtn" class = "bottom_button">Github</button>
+        <button id = "donateBtn" class = "bottom_button">Buy me a Coffee</button>
+        <button id = "rateBtn" class = "bottom_button">Rate Me</button>
+        </div>
+    
+         <main class="input-section">
+        <label for="moleculeInput">Enter Molecule:</label>
+        <input type="text" id="moleculeInput" name="molecule" placeholder="Ex: H2O">
+        <input type="submit" id="submitBtn" value="Submit">
+    </main>
+
+       <section id="resultDashboard">
+        <h3> Analysis Results</h3>
+        
+        <div class="results-grid">
+            <div class="result-item">
+                <span class="result-label">Central Atom:</span>
+                <span id="centralAtomOutput" class="result-value">--</span>
+            </div>
+            
+            <div class="result-item">
+                <span class="result-label">Valence Electrons:</span>
+                <span id="valenceElectronsOutput" class="result-value">--</span>
+            </div>
+
+            <div class="result-item">
+                <span class="result-label">Steric Number / Groups:</span>
+                <span id="stericNumberOutput" class="result-value">--</span>
+            </div>
+
+            <div class="result-item">
+                <span class="result-label">Central Lone Pairs:</span>
+                <span id="lonePairsOutput" class="result-value">--</span>
+            </div>
+
+            <div class="result-item">
+                <span class="result-label">Electron Geometry:</span>
+                <span id="electronGeomOutput" class="result-value">--</span>
+            </div>
+
+            <div class="result-item">
+                <span class="result-label">Molecular Geometry:</span>
+                <span id="molecularGeomOutput" class="result-value highlight">--</span>
+            </div>
+
+            <div class="result-item">
+                <span class="result-label">Bond Hybridization:</span>
+                <span id="hybridizationOutput" class="result-value">--</span>
+            </div>
+
+            <div class="result-item">
+                <span class="result-label">Ideal Bond Angle:</span>
+                <span id="bondAngleOutput" class="result-value">--</span>
+            </div>
+        </div>
+
+        <div class="results-details">
+            <p><strong>Terminal Atoms:</strong> <code id="terminalAtomsOutput">--</code></p>
+            <p><strong>Parsed Molecule Breakdown:</strong> <code id="rawElementsOutput">--</code></p>
+        </div>
+    </section>
+
+
+
+    </header>
