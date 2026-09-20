@@ -1,9 +1,9 @@
 import pytest
-from project import calculate_total_valence
-from project import parse_atoms_subscripts
-from project import determine_central_atom
-from project import validate_formula
-from project import fetch_structure_data
+from VSEPR import calculate_total_valence
+from VSEPR import parse_atoms_subscripts
+from VSEPR import determine_central_atom
+from VSEPR import validate_formula
+from VSEPR import fetch_structure_data
 
 def test_parse_atoms_subscripts():
     assert parse_atoms_subscripts("NO3-") == [{'Element': 'N', 'Subscript': '1'}, {'Element': 'O', 'Subscript': '3'}]

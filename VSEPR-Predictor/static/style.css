@@ -1,0 +1,41 @@
+html, body {
+  margin: 0 auto;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  padding-bottom: 0;
+  max-width: none
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+.credits-bar {
+  
+  margin-top: auto; 
+  height: 200px;
+  
+  
+  max-width: none !important;  
+  
+  
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+
+
+  
+  background-color: #000000;
+  
+
+  background-image: 
+    linear-gradient(rgb(58, 57, 57) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(58, 57, 57) 1px, transparent 1px);
+    
+
+  background-size: 30px 30px;
+}
