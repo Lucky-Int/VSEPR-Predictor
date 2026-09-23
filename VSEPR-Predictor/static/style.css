@@ -1,24 +1,24 @@
+
+
 html, body {
-  margin: 0 auto;
-  padding: 0;
-  width: 100%;
-  min-height: 100vh;
-  padding-bottom: 0;
-  max-width: none
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
-body {
-  display: flex;
-  flex-direction: column;
-}
+
 
 .credits-bar {
   
   margin-top: auto; 
   height: 200px;
+  margin-bottom: 0;
   
+  overflow: hidden;
+  width: 100vw;
   
-  max-width: none !important;  
   
   
   position: relative;
@@ -39,3 +39,35 @@ body {
 
   background-size: 30px 30px;
 }
+
+
+
+.buttons .bottom_button{
+font-size: 3rem;
+padding: 1em 2em; 
+
+
+}
+.buttons {
+  gap: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 25vh;
+}
+
+.buttons .bottom_button {
+  font-size: 3rem;
+  font-weight: 500;
+  padding: 0.6em 1.4em !important; 
+  border-radius: 12px !important;
+  border: 1px solid transparent !important; 
+  box-shadow: 0 4px 6px black;
+  transition: all 0.2s ease-in-out !important;
+}
+
+.buttons .bottom_button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px black;
+}
+
