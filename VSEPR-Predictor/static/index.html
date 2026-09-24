@@ -4,22 +4,22 @@
     <meta charset="UTF-8">
        <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VSEPR Predictor & Modeler</title>
-     <link rel="stylesheet" href="style.css" type="text/css">
      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sakura.css/css/sakura.css" type="text/css">
+     <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body>
     <header>
        
-        <h1>VSEPR Molecular Predictor and Modeler </h1>
+        <h1 class="title">VSEPR Molecular Predictor and Modeler </h1>
       
         <p>VSEPR Predictor is a project that takes in a molecule and calculates its molecular shape and geometries by calculating lewis structure, electron groups, and more.</p>
-       
+    </header>
     
-         <main class="input-section">
-        <label for="moleculeInput">Enter Molecule:</label>
+         <div class="input-section">
+        <label id="askmol">Enter Molecule:</label>
         <input type="text" id="moleculeInput" name="molecule" placeholder="Ex: H2O">
         <input type="submit" id="submitBtn" value="Submit">
-    </main>
+         </div>
 
        <section id="resultDashboard">
         <h3> Analysis Results</h3>
@@ -47,12 +47,12 @@
 
             <div class="result-item">
                 <span class="result-label">Electron Geometry:</span>
-                <span id="electronGeomOutput" class="result-value">--</span>
+                <span id="electronGeoOutput" class="result-value">--</span>
             </div>
 
             <div class="result-item">
-                <span class="result-label">Molecular Geometry:</span>
-                <span id="molecularGeomOutput" class="result-value highlight">--</span>
+                <span class="result-label" id="Mgeo">Molecular Geometry:</span>
+                <span id="molecularGeoOutput" class="result-value highlight">--</span>
             </div>
 
             <div class="result-item">
@@ -74,14 +74,21 @@
     <p>Electronegativities of elements</p>
     <p>Pauling Scale Electronegativities Chart</p>
  <p><b>This Molecule is a RADICAL!</b></p>
+ 
     <footer class="credits-bar">
   <div class="buttons">
-    <button id="docsBtn" class="bottom_button">README.md</button>
-    <button id="gitBtn" class="bottom_button">Github</button>
-    <button id="donateBtn" class="bottom_button">Buy me a Coffee</button>
-    <button id="rateBtn" class="bottom_button">Rate Me</button>
+    <button id="docsBtn" class="bottom_button">Docs</button>
+    <button id="gitBtn" class="bottom_button">Source Code</button>
+    <button id="rateBtn" class="bottom_button">Review</button>
+  </div>
+  <div class="contacts">
+    <h3>CONTACTS</h3>
+    <p>luckyshayare@gmail.com </p>
+    <a href="#" class="gitprof">LuckyIntl</a>
+
+
   </div>
 </footer>
 
        
-    </header>
+ 
