@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+     
     <meta charset="UTF-8">
        <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VSEPR Predictor & Modeler</title>
@@ -18,7 +19,7 @@
          <div class="input-section">
         <label id="askmol">Enter Molecule:</label>
         <input type="text" id="moleculeInput" name="molecule" placeholder="Ex: H2O">
-        <input type="submit" id="submitBtn" value="Submit">
+        <button type="button" id="submitBtn">Submit</button>
          </div>
 
        <section id="resultDashboard">
@@ -73,8 +74,16 @@
     </section>
     <p>Electronegativities of elements</p>
     <p>Pauling Scale Electronegativities Chart</p>
- <p><b>This Molecule is a RADICAL!</b></p>
- 
+    <figure class="captioned-image">
+
+    <a href="https://www.breakingatom.com/images/5f919eed5263d8325e2aae5c_Electronegativity-Chart.jpg" target="_blank">
+  <img src="https://www.breakingatom.com/images/5f919eed5263d8325e2aae5c_Electronegativity-Chart.jpg" alt="Click to enlarge" width="600" height="400">
+</a>
+ <figcaption>Click to Enlarge</figcaption>
+</figure>
+
+    
+    <!--Used AI for some gimmicks and some animations.-->
     <footer class="credits-bar">
   <div class="buttons">
     <button id="docsBtn" class="bottom_button">Docs</button>
@@ -89,6 +98,9 @@
 
   </div>
 </footer>
+<script src="app.js"></script>
+</body>
+</html>
 
        
  

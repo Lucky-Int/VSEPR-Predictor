@@ -7,7 +7,12 @@ import sys
 from chemicals import search_chemical
 
 
-def main():
+def main(molecule_from_web=None):
+    if molecule_from_web:
+        molecule = molecule_from_web
+    else:
+        molecule = input("Enter Molecule: ") 
+
     vsepr_table = {
         "AX2": {
             "steric_number": 2,
@@ -129,7 +134,6 @@ def main():
     }
     # Error Checking and input
     print("Welcome to VSEPR Predictor! ")
-    molecule = input("Molecule: ")
     if not validate_formula(molecule):
         sys.exit(
             "Not a valid molecule (please disclude starting coefficient, if applicable)"
@@ -191,6 +195,10 @@ As a result, experimental data or otherwise strict quantum mechanics is needed t
     mol_geo = vsepr_table[vsepr_form]["molecular_geometry"]
     hybridization = vsepr_table[vsepr_form]["hybridization"]
     bond_angles = vsepr_table[vsepr_form]["bond_angles"]
+
+    # IF CALLED FROM WEB API: Return data immediately without running terminal quiz inputs
+    if molecule_from_web:
+        return central_atom, ve_total, central_lone_pairs, elements_and_nums, steric_number, terminal_atoms, e_geo, mol_geo, hybridization, bond_angles
 
     element_one = elements_and_nums[0]["Element"]
     sub_element_one = int(elements_and_nums[0]["Subscript"])
@@ -401,23 +409,6 @@ Below is the summarized info as well as more we can figure out using the steric 
     print("Bond Hybridization:", hybridization)
     print("Bond Angle(s):", bond_angles)
 
-    # [{'Element': 'H', 'Subscript': '2'}, {'Element': 'O', 'Subscript': '1'}]
-
-
-# Consider 2 electrons used for each bond shared between the core atom and another one.
-
-# If there are still leftover electrons assign them to the outer atoms as lone pairs.
-
-# If there are still more leftover electrons assign them to the central atom as lone pairs
-
-# If the central atom does not have enough electrons, needing at least 8, create more covalent bonds.
-
-# Check formal charges and if they can be reduced closer 0 do as that.
-
-
-# Count the amount of electron pairs/clouds around the central atom; give the compounds its electron-group geo.
-# ignore lone pairs and consider the greater space they take up to predict the molecular geometry.
-
 
 def fetch_structure_data(
     elements_and_nums,
@@ -448,14 +439,6 @@ def fetch_structure_data(
             raise ValueError(
                 "This molecule is a radical. VSEPR Theory cannot reliably calculate the geometries of these molecules; please try a different molecule."
             )
-
-        # central_electrons = central_lone_pairs * 2 + num_terminal_atoms
-
-    # check formal charge of central atom
-    # central_electrons = (central_lone_pairs * 2) + extra_electrons + num_terminal_atoms
-    # central_atom_valence = get_element(central_atom).nvalence()
-    # central_formal_charge = central_atom_valence - central_electrons
-    # ^^ Might use central_formal_charge for creating the double and triple bonds later
 
     else:
         central_lone_pairs = 0
@@ -546,10 +529,9 @@ def validate_formula(formula):
     try:
         search_chemical(formula)
         return True
-    except ValueError:
+    except Exception:
         return False
 
 
-# ex: [{'Element': 'H', 'Subscript': '2'}, {'Element': 'O', 'Subscript': '1'}]
 if __name__ == "__main__":
     main()
