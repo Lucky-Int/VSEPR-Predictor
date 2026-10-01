@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-
+    
     const API_URL = 'https://supreme-space-potato-gx4664rv5j542xv9-8000.app.github.dev/predict';
     const submitBtn = document.getElementById('submitBtn');
     const moleculeInput = document.getElementById('moleculeInput');

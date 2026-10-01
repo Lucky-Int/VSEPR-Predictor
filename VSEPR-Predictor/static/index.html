@@ -1,28 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Corrected Executable CDN Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/3Dmol/2.5.5/3Dmol-min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/4.0.0/jquery.min.js"></script>
      
     <meta charset="UTF-8">
-       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VSEPR Predictor & Modeler</title>
-     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sakura.css/css/sakura.css" type="text/css">
-     <link rel="stylesheet" href="style.css" type="text/css">
+    <link rel="stylesheet" href="https://jsdelivr.net" type="text/css">
+    <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body>
     <header>
-       
         <h1 class="title">VSEPR Molecular Predictor and Modeler </h1>
-      
         <p>VSEPR Predictor is a project that takes in a molecule and calculates its molecular shape and geometries by calculating lewis structure, electron groups, and more.</p>
     </header>
     
-         <div class="input-section">
+    <div class="input-section">
         <label id="askmol">Enter Molecule:</label>
         <input type="text" id="moleculeInput" name="molecule" placeholder="Ex: H2O">
-        <button type="button" id="submitBtn">Submit</button>
-         </div>
+        <button onclick="loadMolecule()" type="button" id="submitBtn">Submit</button>
+    </div>
+    <div id="errorMessage" class="error"></div>
 
-       <section id="resultDashboard">
+    <!-- 3D local canvas wrapper (No blocking frames) -->
+    <div id="viewer-container">
+        <div id="molviewFrame" style="width: 500px; height: 400px; position: relative; border: 1px solid #ccc; border-radius: 8px; margin: 0 auto; background-color: #ffffff;"></div>
+    </div>
+
+        <script>
+        // Initialize the local 3D viewer mapping engine
+        let element = $('#molviewFrame');
+        let viewer = $3Dmol.createViewer(element, { backgroundColor: 'white' });
+
+        // Paint a default molecule (CO2) on base page generation
+        fetch(`https://nih.gov`)
+            .then(res => res.text())
+            .then(sdfData => {
+                viewer.addModel(sdfData, "sdf");
+                viewer.setStyle({}, { ballandstick: {} });
+                viewer.zoomTo();
+                viewer.render();
+            });
+
+        async function loadMolecule() {
+            const userInput = document.getElementById('moleculeInput').value.trim();
+            const errorDiv = document.getElementById('errorMessage');
+            
+            errorDiv.textContent = "";
+
+            if (!userInput) return;
+
+            const encodedName = encodeURIComponent(userInput);
+            const pubChemCidUrl = `https://nih.gov{encodedName}/cids/JSON`;
+
+            try {
+                // Step 1: Query PubChem database for the typed formula's Compound ID (CID)
+                const cidResponse = await fetch(pubChemCidUrl);
+                if (!cidResponse.ok) {
+                    throw new Error("Molecule not found. Try another formula.");
+                }
+
+                const cidData = await cidResponse.json();
+                const cid = cidData.IdentifierList.CID;
+
+                // Step 2: Fetch the raw structural coordinate maps (SDF format) for that ID
+                const sdfResponse = await fetch(`https://nih.gov{cid}/SDF`);
+                if (!sdfResponse.ok) {
+                    throw new Error("Could not retrieve 3D coordinate assets.");
+                }
+                
+                const sdfData = await sdfResponse.text();
+
+                // Step 3: Flush the canvas and paint the new rotatable ball-and-stick geometry
+                viewer.clear();
+                viewer.addModel(sdfData, "sdf");
+                viewer.setStyle({}, { ballandstick: { radius: 0.3, bondradius: 0.15 } });
+                viewer.zoomTo();
+                viewer.render();
+                
+            } catch (error) {
+                errorDiv.textContent = error.message;
+            }
+        }
+
+        document.getElementById('moleculeInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                loadMolecule();
+            }
+        });
+    </script>
+
+          
+    <section id="resultDashboard">
         <h3> Analysis Results</h3>
         
         <div class="results-grid">
@@ -72,35 +143,27 @@
             <p><strong>Parsed Molecule Breakdown:</strong> <code id="rawElementsOutput">--</code></p>
         </div>
     </section>
-    <p>Electronegativities of elements</p>
+    
     <p>Pauling Scale Electronegativities Chart</p>
     <figure class="captioned-image">
+        <a href="https://breakingatom.com" target="_blank">
+            <img src="https://breakingatom.com" alt="Click to enlarge" width="600" height="400">
+        </a>
+        <figcaption>Click to Enlarge</figcaption>
+    </figure>
 
-    <a href="https://www.breakingatom.com/images/5f919eed5263d8325e2aae5c_Electronegativity-Chart.jpg" target="_blank">
-  <img src="https://www.breakingatom.com/images/5f919eed5263d8325e2aae5c_Electronegativity-Chart.jpg" alt="Click to enlarge" width="600" height="400">
-</a>
- <figcaption>Click to Enlarge</figcaption>
-</figure>
-
-    
-    <!--Used AI for some gimmicks and some animations.-->
     <footer class="credits-bar">
-  <div class="buttons">
-    <button id="docsBtn" class="bottom_button">Docs</button>
-    <button id="gitBtn" class="bottom_button">Source Code</button>
-    <button id="rateBtn" class="bottom_button">Review</button>
-  </div>
-  <div class="contacts">
-    <h3>CONTACTS</h3>
-    <p>luckyshayare@gmail.com </p>
-    <a href="#" class="gitprof">LuckyIntl</a>
-
-
-  </div>
-</footer>
-<script src="app.js"></script>
+        <div class="buttons">
+            <button id="docsBtn" class="bottom_button">Docs</button>
+            <button id="gitBtn" class="bottom_button">Source Code</button>
+            <button id="rateBtn" class="bottom_button">Review</button>
+        </div>
+        <div class="contacts">
+            <h3>CONTACTS</h3>
+            <p>luckyshayare@gmail.com </p>
+            <a href="#" class="gitprof">LuckyIntl</a>
+        </div>
+    </footer>
+    <script src="app.js"></script>
 </body>
 </html>
-
-       
- 
