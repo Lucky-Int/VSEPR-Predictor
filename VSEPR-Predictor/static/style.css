@@ -201,3 +201,31 @@ padding: 1em 2em;
     transition: transform 0.2s ease;
 }
 
+#moleculeViewer {
+  width: 100%;
+  max-width: 100%;
+  height: 400px;
+  position: relative;
+  box-sizing: border-box;
+  /* Remove the standard border from here so it doesn't clash */
+  border: none; 
+}
+
+/* This creates a layer that sits perfectly ON TOP of the molecule canvas */
+#moleculeViewer::after {
+  content: "";
+  position: absolute;
+  /* Inset 0 stretches this overlay layer to all 4 edges perfectly */
+  inset: 0; 
+  
+  /* Draw the solid border here */
+  border: 5px solid #000000;
+  
+  /* Crucial: prevents the border layer from blocking mouse clicks/drags on the molecule */
+  pointer-events: none; 
+  
+  /* Forces it to stay visually stacked on top of the WebGL canvas */
+  z-index: 9999; 
+}
+
+/* AI Code due to border problem ^^^ Comments were kept everywhere wherein AI was used reasonably */
