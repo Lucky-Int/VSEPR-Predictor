@@ -30,13 +30,21 @@ html, body {
 .contacts {
 text-align: center;
 color: white;
-transform: translateY(-40px)
-
+transform: translateY(-40px);
+display: flex;
+flex-direction: column;
 
 }
 .gitprof{
 font-size: 2.5rem;
 margin-top: 20px;
+background-color: teal;
+color: Black
+}
+.gmail{
+text-decoration: solid;
+
+
 }
 
 
@@ -86,23 +94,26 @@ padding: 1em 2em;
 }
 
 .buttons .bottom_button {
-  font-size: 3rem;
+  font-size: 2rem;
   font-weight: 500;
   padding: 0.6em 1.4em ; 
   border-radius: 12px ;
   border: 1px solid transparent ; 
   box-shadow: 0 4px 6px black;
   transition: all 0.2s ease-in-out ;
-  text-transform: uppercase;
-  gap: 0.025rem;
+ 
+  
   font-weight: bold;
   color: whitesmoke;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
   
 }
 
 .buttons .bottom_button:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 12px black;
+ 
 }
 
 #resultDashboard {
@@ -229,3 +240,9 @@ padding: 1em 2em;
 }
 
 /* AI Code due to border problem ^^^ Comments were kept everywhere wherein AI was used reasonably */
+
+.chart_title{
+text-decoration: underline;
+font-weight: bold;
+
+}
