@@ -1,6 +1,8 @@
 from fastapi import FastAPI, Body, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from VSEPR import main as run_vsepr_pipeline  
+import os
+import uvicorn
 
 app = FastAPI()
 
@@ -50,3 +52,7 @@ def predict_vsepr(payload: dict = Body(...)):
         "hybridization": hybridization,
         "bond_angles": bond_angles
     }
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run("main:app", host="0.0.0.0", port=port)
