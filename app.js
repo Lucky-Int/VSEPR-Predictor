@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     
-    const API_URL = 'https://supreme-space-potato-gx4664rv5j542xv9-8000.app.github.dev/predict';
+   
+    const API_URL = '/predict';
     const submitBtn = document.getElementById('submitBtn');
     const moleculeInput = document.getElementById('moleculeInput');
     const resultDashboard = document.getElementById('resultDashboard');
@@ -26,16 +27,16 @@ document.addEventListener('DOMContentLoaded', () => {
         submitBtn.disabled = true;
         submitBtn.innerText = "Analyzing... ⏳";
         document.getElementById('centralAtomOutput').innerText = "Calculating...";
-    document.getElementById('valenceElectronsOutput').innerText = "Calculating...";
-    document.getElementById('stericNumberOutput').innerText = "Calculating...";
-    document.getElementById('lonePairsOutput').innerText = "Calculating...";
-    document.getElementById('electronGeoOutput').innerText = "Calculating...";
-    document.getElementById('molecularGeoOutput').innerText = "Calculating...";
-    document.getElementById('hybridizationOutput').innerText = "Calculating...";
-    document.getElementById('bondAngleOutput').innerText = "Calculating...";
+        document.getElementById('valenceElectronsOutput').innerText = "Calculating...";
+        document.getElementById('stericNumberOutput').innerText = "Calculating...";
+        document.getElementById('lonePairsOutput').innerText = "Calculating...";
+        document.getElementById('electronGeoOutput').innerText = "Calculating...";
+        document.getElementById('molecularGeoOutput').innerText = "Calculating...";
+        document.getElementById('hybridizationOutput').innerText = "Calculating...";
+        document.getElementById('bondAngleOutput').innerText = "Calculating...";
 
-    document.getElementById('terminalAtomsOutput').innerText = "Calculating...";
-    document.getElementById('rawElementsOutput').innerText = "Calculating...";
+        document.getElementById('terminalAtomsOutput').innerText = "Calculating...";
+        document.getElementById('rawElementsOutput').innerText = "Calculating...";
             
         
         try {
