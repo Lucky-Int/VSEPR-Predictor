@@ -74,8 +74,8 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('hybridizationOutput').innerText = responseData.hybridization;
             document.getElementById('bondAngleOutput').innerText = responseData.bond_angles;
 
-            document.getElementById('terminalAtomsOutput').innerText = JSON.stringify(responseData.terminal_atoms);
-            document.getElementById('rawElementsOutput').innerText = JSON.stringify(responseData.elements_and_nums);
+           
+           
 
             
             resultDashboard.style.display = 'block';
