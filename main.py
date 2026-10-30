@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Body, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 from VSEPR import main as run_vsepr_pipeline  
 import os
 import uvicorn
@@ -13,6 +14,30 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# --- FRONTEND ROUTING ---
+
+@app.get("/")
+def read_index():
+    return FileResponse("index.html")
+
+@app.get("/style.css")
+def read_css():
+    return FileResponse("style.css")
+
+@app.get("/app.js")
+def read_js():
+    return FileResponse("app.js")
+
+@app.get("/modeler.js")
+def read_modeler_js():
+    return FileResponse("modeler.js")
+
+@app.get("/electronegativitychart.jpg")
+def read_chart_image():
+    return FileResponse("electronegativitychart.jpg")
+
+# --- BACKEND API ROUTING ---
 
 @app.post("/predict")
 def predict_vsepr(payload: dict = Body(...)):
