@@ -1,7 +1,13 @@
 from fastapi import FastAPI, Body, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from api.VSEPR import main as run_vsepr_pipeline  
+from fastapi.responses import HTMLResponse
 import os
+
+# Import your pipeline logic dynamically based on layout location
+try:
+    from VSEPR import main as run_vsepr_pipeline
+except ImportError:
+    from api.VSEPR import main as run_vsepr_pipeline
 
 app = FastAPI()
 
@@ -13,8 +19,25 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# --- BACKEND API ROUTING ONLY ---
+# --- NATIVE FRONTEND ROUTING ---
+# This explicitly catches the root path (/) and sends your raw HTML directly to the browser
+@app.get("/", response_class=HTMLResponse)
+def read_index():
+    # If index.html is inside public/
+    html_path = os.path.join(os.path.dirname(__file__), "..", "public", "index.html")
+    
+    # Fallback checking if index.html is sitting directly in the root
+    if not os.path.exists(html_path):
+        html_path = os.path.join(os.path.dirname(__file__), "..", "index.html")
+        
+    # Final fallback checking inside the api folder itself
+    if not os.path.exists(html_path):
+        html_path = os.path.join(os.path.dirname(__file__), "index.html")
 
+    with open(html_path, "r", encoding="utf-8") as f:
+        return f.read()
+
+# --- BACKEND API ROUTING ---
 @app.post("/predict")
 def predict_vsepr(payload: dict = Body(...)):
     molecule = payload.get("molecule")
