@@ -1,16 +1,8 @@
 {
-  "builds": [
+  "rewrites": [
     {
-      "src": "main.py",
-      "use": "@vercel/python"
+      "source": "/predict",
+      "destination": "/api/main.py"
     }
-  ],
-  "routes": [
-    { "src": "/predict", "dest": "main.py" },
-    { "src": "/style.css", "dest": "style.css" },
-    { "src": "/app.js", "dest": "app.js" },
-    { "src": "/modeler.js", "dest": "modeler.js" },
-    { "src": "/electronegativitychart.jpg", "dest": "electronegativitychart.jpg" },
-    { "src": "/(.*)", "dest": "index.html" }
   ]
 }

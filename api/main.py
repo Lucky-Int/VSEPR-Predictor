@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Body, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from VSEPR import main as run_vsepr_pipeline  
+from api.VSEPR import main as run_vsepr_pipeline  
 import os
 
 app = FastAPI()

@@ -1,0 +1,7 @@
+[
+  "test_VSEPR.py::test_calculate_total_valence",
+  "test_VSEPR.py::test_determine_central_atom",
+  "test_VSEPR.py::test_fetch_structure_data",
+  "test_VSEPR.py::test_parse_atoms_subscripts",
+  "test_VSEPR.py::test_validate_formula"
+]
