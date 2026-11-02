@@ -7,8 +7,10 @@
   ],
   "routes": [
     { "src": "/predict", "dest": "main.py" },
-    { "src": "/", "dest": "index.html" },
-    { "handle": "filesystem" },
-    { "src": "/(.*)", "status": 404, "dest": "404.html" }
+    { "src": "/style.css", "dest": "style.css" },
+    { "src": "/app.js", "dest": "app.js" },
+    { "src": "/modeler.js", "dest": "modeler.js" },
+    { "src": "/electronegativitychart.jpg", "dest": "electronegativitychart.jpg" },
+    { "src": "/(.*)", "dest": "index.html" }
   ]
 }
