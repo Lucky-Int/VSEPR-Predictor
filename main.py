@@ -1,9 +1,7 @@
 from fastapi import FastAPI, Body, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
 from VSEPR import main as run_vsepr_pipeline  
 import os
-import uvicorn
 
 app = FastAPI()
 
@@ -15,29 +13,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# --- FRONTEND ROUTING ---
-
-@app.get("/")
-def read_index():
-    return FileResponse("index.html")
-
-@app.get("/style.css")
-def read_css():
-    return FileResponse("style.css")
-
-@app.get("/app.js")
-def read_js():
-    return FileResponse("app.js")
-
-@app.get("/modeler.js")
-def read_modeler_js():
-    return FileResponse("modeler.js")
-
-@app.get("/electronegativitychart.jpg")
-def read_chart_image():
-    return FileResponse("electronegativitychart.jpg")
-
-# --- BACKEND API ROUTING ---
+# --- BACKEND API ROUTING ONLY ---
 
 @app.post("/predict")
 def predict_vsepr(payload: dict = Body(...)):
@@ -60,7 +36,6 @@ def predict_vsepr(payload: dict = Body(...)):
         ) = run_vsepr_pipeline(molecule_from_web=molecule)
         
     except SystemExit as err:
-        # Convert any sys.exit from VSEPR.py into a clean 400 error
         raise HTTPException(status_code=400, detail=str(err))
     except Exception as err:
         raise HTTPException(status_code=400, detail=str(err))
@@ -77,7 +52,3 @@ def predict_vsepr(payload: dict = Body(...)):
         "hybridization": hybridization,
         "bond_angles": bond_angles
     }
-
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8000))
-    uvicorn.run("main:app", host="0.0.0.0", port=port)
