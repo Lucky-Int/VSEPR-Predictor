@@ -2,11 +2,20 @@ from fastapi import FastAPI, Body, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, Response
 import os
+import sys
+
+# CRITICAL: Force Vercel to append the root folder to python path
+# This prevents the module/pipeline import errors completely
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 try:
-    from VSEPR import main as run_vsepr_pipeline
+    import VSEPR
 except ImportError:
-    from api.VSEPR import main as run_vsepr_pipeline
+    try:
+        from api import VSEPR
+    except ImportError:
+        import sys
+        raise ImportError(f"Could not load VSEPR pipeline. Current sys.path: {sys.path}")
 
 app = FastAPI()
 
@@ -18,13 +27,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Robust path handler to find files whether they are in / or /public relative to the api/ folder
+# Robust path engine that handles file retrieval safely
 def get_file_content(filename: str, binary: bool = False):
-    base_dir = os.path.dirname(os.path.abspath(__file__))
+    api_dir = os.path.dirname(os.path.abspath(__file__))
+    root_dir = os.path.dirname(api_dir)
+    
     paths_to_check = [
-        os.path.join(base_dir, "..", filename),          # Directly in the root directory
-        os.path.join(base_dir, "..", "public", filename), # Inside a public directory if it exists
-        os.path.join(base_dir, filename)                  # Inside the api/ directory itself
+        os.path.join(root_dir, filename),
+        os.path.join(api_dir, filename),
+        os.path.join(root_dir, "public", filename)
     ]
     for path in paths_to_check:
         if os.path.exists(path):
@@ -40,7 +51,7 @@ def get_file_content(filename: str, binary: bool = False):
 def read_index():
     content = get_file_content("index.html")
     if not content:
-        raise HTTPException(status_code=404, detail="index.html not found in root directory")
+        raise HTTPException(status_code=404, detail="index.html not found")
     return content
 
 @app.get("/style.css")
@@ -74,6 +85,7 @@ def read_chart_image():
 # --- BACKEND API ROUTING ---
 
 @app.post("/predict")
+@app.post("/api/predict")
 def predict_vsepr(payload: dict = Body(...)):
     molecule = payload.get("molecule")
     if not molecule:
@@ -91,7 +103,7 @@ def predict_vsepr(payload: dict = Body(...)):
             mol_geo, 
             hybridization, 
             bond_angles
-        ) = run_vsepr_pipeline(molecule_from_web=molecule)
+        ) = VSEPR.main(molecule_from_web=molecule)
         
     except SystemExit as err:
         raise HTTPException(status_code=400, detail=str(err))

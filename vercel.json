@@ -6,8 +6,12 @@
     }
   ],
   "routes": [
-    { "src": "/api/predict", "dest": "api/main.py" },
     { "src": "/predict", "dest": "api/main.py" },
+    { "src": "/api/predict", "dest": "api/main.py" },
+    { "src": "/style.css", "dest": "api/main.py" },
+    { "src": "/app.js", "dest": "api/main.py" },
+    { "src": "/modeler.js", "dest": "api/main.py" },
+    { "src": "/electronegativitychart.jpg", "dest": "api/main.py" },
     { "src": "/(.*)", "dest": "api/main.py" }
   ]
 }
