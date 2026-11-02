@@ -1,8 +1,13 @@
 {
-  "rewrites": [
+  "builds": [
     {
-      "source": "/predict",
-      "destination": "/api/main.py"
+      "src": "api/main.py",
+      "use": "@vercel/python"
     }
+  ],
+  "routes": [
+    { "src": "/api/predict", "dest": "api/main.py" },
+    { "src": "/predict", "dest": "api/main.py" },
+    { "src": "/(.*)", "dest": "api/main.py" }
   ]
 }

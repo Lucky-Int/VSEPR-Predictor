@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     
-    const API_URL = '/predict';
+    
+    const API_URL = '/api/predict';
+
     const submitBtn = document.getElementById('submitBtn');
     const moleculeInput = document.getElementById('moleculeInput');
     const resultDashboard = document.getElementById('resultDashboard');
