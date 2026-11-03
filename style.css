@@ -220,6 +220,7 @@ padding: 1em 2em;
   box-sizing: border-box;
   /* Remove the standard border from here so it doesn't clash */
   border: none; 
+  margin-top: 1.5rem
 }
 
 /* This creates a layer that sits perfectly ON TOP of the molecule canvas */
