@@ -247,3 +247,7 @@ text-decoration: underline;
 font-weight: bold;
 
 }
+
+html, body, * {
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://w3.org' width='32' height='32' viewBox='0 0 32 32'><circle cx='16' cy='16' r='3' fill='%232c8898'/><ellipse cx='16' cy='16' rx='13' ry='5' fill='none' stroke='%232c8898' stroke-width='2' transform='rotate(30 16 16)'/><ellipse cx='16' cy='16' rx='13' ry='5' fill='none' stroke='%232c8898' stroke-width='2' transform='rotate(-30 16 16)'/><ellipse cx='16' cy='16' rx='13' ry='5' fill='none' stroke='%232c8898' stroke-width='2' transform='rotate(90 16 16)'/></svg>") 16 16, auto !important;
+}
