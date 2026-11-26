@@ -248,7 +248,10 @@ font-weight: bold;
 
 }
 
-html, body, * {
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='8' fill='%232c8898' fill-opacity='0.4' stroke='%232c8898' stroke-width='2'/%3E%3C/svg%3E") 12 12, auto !important;
-}
+<style>
+  html, body, * {
+    cursor: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAWklEQVR4nGNgGAWjgP6AET8uKSn5n56e/p9YDAoY8eOSkpL/ycnJ/4nFoIARPy4uLv6flJT0n1gMChjx46Kiov+JiYn/icWggBE/Liws/J+QkPCfWAwKGPHjUUA3AADc2x8R2/3IAAAAAElFTkSuQmCC") 8 8, auto !important;
+  }
+</style>
+
 
